@@ -1,5 +1,6 @@
+setwd("C:/Users/Morty/Documents/R_Mobility_Analysis")
 source("Mobility_Analyze_function.R")
-dir = "C:/Users/jasko/IdeaProjects/OLEDPowerMeter/Mobility_MeasMUX/1806_DepRateStudy_mCBP"
+dir = "C:/Users/Morty/Documents/Mobility_Data/20180703"
 dirNew = readline(paste("Current Dir is:",dir,"\n","    Press q to change, enter to continue"))
 if(dirNew =='q'){
   newDir = readline("Directory Name: ")
@@ -57,9 +58,18 @@ for(i in seq(1,length(files))){
     # Accept data?
     accept = readline("Accept Data? (y/n): ")
     if(accept != 'n'){
-      totalData[i+((select-1)/2),] = dataOut
+      totalData[2*i-1+((select-1)/2),] = dataOut
     }
   }
 }
 
-write.csv(totalData,paste(dir,"/Mobility_Fits.csv",sep=''))
+for(i in seq(1,length(totalData[,2]))){
+  if (totalData[i,2] == '1'){
+    totalData[i,2] = '+'
+  } else if (totalData[i,2] == '3'){
+    totalData[i,2] = '-'
+  }
+}
+
+colnames(totalData) <- c("Sample","SweepDir","Vlow_fit","Vhi_fit","mu_0","gamma")
+write.csv(totalData,paste(dir,"/Mobility_Fits.csv",sep=''),row.names=F)
